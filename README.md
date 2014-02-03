@@ -11,6 +11,7 @@ Features
 Requires
 ----------
 	- ModuleManager >= 1.5
+	- (optional) RasterPropMonitor, dont use it? delete the GameData/ProbeControlRoom_RPM/ directory
 
 
 How to use

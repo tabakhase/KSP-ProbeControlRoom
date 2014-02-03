@@ -126,6 +126,8 @@ namespace ProbeControlRoom
 				if(UIPartActionController.Instance != null)
 					UIPartActionController.Instance.Deactivate ();
 
+				CameraManager.Instance.currentCameraMode = CameraManager.CameraMode.Internal;
+
 				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] startIVA(Part) - DONE");
 				return true;
 			} else {
