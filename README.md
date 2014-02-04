@@ -6,12 +6,14 @@ KSP-Forum Thread: [forum.kerbalspaceprogram.com/threads/67450](http://forum.kerb
 Features
 --------
 	Adds IVA to UNMANNED Vessels/CommandModules that have no Crew/Internal.
+		AutoUpdates all "ModuleCommand"-Parts that have no "INTERNAL"
+		RasterPropMonitor gets enabled automatically if the .dll is loaded
 
 	
 Requires
 ----------
-	- ModuleManager >= 1.5
-	- (optional) RasterPropMonitor, dont use it? delete the GameData/ProbeControlRoom_RPM/ directory
+	- [ModuleManager](http://forum.kerbalspaceprogram.com/threads/55219) >= 1.5.5
+	- (optional-recommended) [RasterPropMonitor](http://forum.kerbalspaceprogram.com/threads/57603), dont use it? autodisables itself
 
 
 How to use
