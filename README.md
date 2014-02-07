@@ -14,6 +14,7 @@ Requires
 ----------
 	- [ModuleManager](http://forum.kerbalspaceprogram.com/threads/55219) >= 1.5.5
 	- (optional-recommended) [RasterPropMonitor](http://forum.kerbalspaceprogram.com/threads/57603), dont use it? autodisables itself
+	- (optional) [Toolbar](http://forum.kerbalspaceprogram.com/threads/60863), dont use it? autodisables itself
 
 
 How to use
@@ -25,6 +26,7 @@ How to use
 	 a. MannedVessel: Bottom right, above the KerbalAvatars is a IVA button
 	 b. UnmannedVessel: Use the CameraMode button (C) to access/leave IVA
 	 c. Righclick the ProbeCore and click "IVA from here"
+	 d. click the IVA button in the toolbar (if installed)
 
 	 
 Thanks

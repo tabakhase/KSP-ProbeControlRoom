@@ -10,7 +10,7 @@ namespace ProbeControlRoom
 	public class ProbeControlRoom : MonoBehaviour
 	{
 		public static ProbeControlRoom Instance { get; protected set; }
-		public bool isActive = false;
+		public static bool isActive = false;
 		public List<Part> vesselRooms = new List<Part>();
 		public List<Part> vesselStockIVAs = new List<Part>();
 
@@ -23,7 +23,7 @@ namespace ProbeControlRoom
 		{
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] Start()");
 			if (Instance != null) {
-				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] Start() - InstanceKill");
+				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] Start() - InstanceKill");
 				Destroy (this);
 				return;
 			}
@@ -42,25 +42,23 @@ namespace ProbeControlRoom
 		}
 
 
-		public bool vesselCanIVA
+		public static bool vesselCanIVA
 		{ get {
-				if (vesselRooms.Count >= 1) {
+				if (ProbeControlRoom.Instance.vesselRooms.Count >= 1) {
 					return true;
 				} else {
 					return false;
 				}
 		}}
 
-		public bool vesselCanStockIVA
+		public static bool vesselCanStockIVA
 		{ get {
-				if (vesselStockIVAs.Count >= 1) {
+				if (ProbeControlRoom.Instance.vesselStockIVAs.Count >= 1) {
 					return true;
 				} else {
 					return false;
 				}
 		}}
-
-
 
 
 

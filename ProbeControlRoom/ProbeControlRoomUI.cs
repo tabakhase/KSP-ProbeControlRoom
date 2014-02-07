@@ -5,24 +5,54 @@ namespace ProbeControlRoom
 	[KSPAddon(KSPAddon.Startup.Flight, false)]
 	public class ProbeControlRoomUI : MonoBehaviour
 	{
+		public static ProbeControlRoomUI Instance { get; protected set; }
 		private bool initStylesDone = false;
+		private bool toolbarIsActive = false;
+		private bool hideUIState = false;
 		private Rect ivaButtonPosition;
 		private GUIStyle windowIVAButtStyle;
 		private GUIStyle windowIVAButtButtonStyle;
 
 		private bool COMPONENT_OnGUI_DEBUG = false;
-
-
+		
 		public void Start()
 		{
+			if (Instance != null) {
+				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom][ProbeControlRoomUI] Start() - InstanceKill");
+				Destroy (this);
+				return;
+			}
+			Instance = this;
 			if(!initStylesDone) InitStyles();
+			GameEvents.onHideUI.Add(onHideUI);
+			GameEvents.onShowUI.Add(onShowUI);
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom][ProbeControlRoomUI] OnStart()");
 		}
+
+		void onHideUI()
+		{
+			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom][ProbeControlRoomUI] onHideUI()");
+			hideUIState = true;
+		}
+
+		void onShowUI()
+		{
+			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom][ProbeControlRoomUI] onShowUI()");
+			hideUIState = false;
+		}
+
 		public void OnDestroy()
 		{
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom][ProbeControlRoomUI] OnDestroy()");
+			GameEvents.onHideUI.Remove(onHideUI);
+			GameEvents.onShowUI.Remove(onShowUI);
 		}
 
+		public static void messageThatToolbarIsActive() 
+		{
+			//ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom][ProbeControlRoomUI] messageThatToolbarIsActive()");
+			ProbeControlRoomUI.Instance.toolbarIsActive = true;
+		}
 
 		private  void InitStyles()
 		{
@@ -60,10 +90,10 @@ namespace ProbeControlRoom
 			if(COMPONENT_OnGUI_DEBUG)
 				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom][ProbeControlRoomUI] OnGUI()");
 			var scene = HighLogic.LoadedScene;
-			if (scene == GameScenes.FLIGHT) {
-				if (ProbeControlRoom.Instance.vesselCanIVA && !MapView.MapIsEnabled) {
+			if (scene == GameScenes.FLIGHT && !toolbarIsActive) {
+				if (ProbeControlRoom.vesselCanIVA && !hideUIState && !MapView.MapIsEnabled) {
 					GUILayout.BeginArea (ivaButtonPosition, windowIVAButtStyle);
-					if (ProbeControlRoom.Instance.isActive) {
+					if (ProbeControlRoom.isActive) {
 						if (GUILayout.Button ("End IVA", windowIVAButtButtonStyle)) {
 							ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom][ProbeControlRoomUI] OnGUI().Button(End IVA)");
 							ProbeControlRoom.Instance.stopIVA ();
