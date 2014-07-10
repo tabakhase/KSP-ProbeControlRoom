@@ -1,0 +1,20 @@
+               Main Info
+
+
+
+            1: Resources
+            2: Mission Info
+            3: Radar Altitude
+            4: Vessel View
+
+
+
+
+
+
+
+
+
+
+
+KMCT 1.0

@@ -12,9 +12,15 @@ Features
 	
 Requires
 ----------
-	- [ModuleManager](http://forum.kerbalspaceprogram.com/threads/55219) >= 1.5.5
-	- (optional-recommended) [RasterPropMonitor](http://forum.kerbalspaceprogram.com/threads/57603), dont use it? autodisables itself
-	- (optional) [Toolbar](http://forum.kerbalspaceprogram.com/threads/60863), dont use it? autodisables itself
+	- [ModuleManager](http://forum.kerbalspaceprogram.com/threads/55219) >= v2.1.5
+	- (optional) [Toolbar](http://forum.kerbalspaceprogram.com/threads/60863) >= v1.7.3
+
+For RasterPropMonitor
+----------
+	- [RasterPropMonitor](http://forum.kerbalspaceprogram.com/threads/57603) >= v0.17
+	- (optional) [VesselView](http://forum.kerbalspaceprogram.com/threads/80581) >= v0.5.1
+	- (optional) [MechJeb2](http://forum.kerbalspaceprogram.com/threads/12384) >= v2.2.1.254
+	- (optional) [SCANsat](http://forum.kerbalspaceprogram.com/threads/80369) >= v6.0
 
 
 How to use
@@ -34,11 +40,13 @@ Thanks
 	- G'th for the idea&kick to actually do it
 	- all the KSP modders putting tons of sourcecode out there to read & learn
 	- the folks in the #kspmodders irc that linked me there ;-)
+	- "Albert VDS" for the excelent work hes done on the 3D Model/Textures/Pages
 	
 	
-Author
+Authors
 -------
-	Christian 'Tabakhase' Hackmann	(mail <at> tabakhase.com)
+	Christian 'Tabakhase' Hackmann	(mail <at> tabakhase.com) - PluginCode
+	'Albert VDS' - 3D & Textures of MissionControl
 	
 	
 License

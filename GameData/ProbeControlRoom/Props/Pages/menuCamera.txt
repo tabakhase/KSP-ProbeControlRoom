@@ -1,0 +1,20 @@
+              Camera Menu
+
+
+
+        1: Camera 1  5: Camera 5
+        2: Camera 2  6: Camera 6
+        3: Camera 3  7: Camera 7
+        4: Camera 4  8: Camera 8
+
+            0: Docking Camera
+               
+
+
+
+
+
+
+
+
+KMCT 1.0

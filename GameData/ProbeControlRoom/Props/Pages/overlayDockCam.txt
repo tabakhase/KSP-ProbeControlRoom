@@ -1,0 +1,20 @@
+                Docking Camera
+
+
+
+
+{0:;"[#ff5050ff]              [NO TARGET]               ";""}TARGET IS [{1}]   $&$ TARGETEXISTS TARGETNAME
+
+
+
+
+ 
+
+{0:;"                                        ";""}DISTANCE $&$TARGETEXISTS
+{2:;"                                        ";""}  TOTAL {0:SIP_6.3}m  AT  {1:SIP_6.3}m/s$&$ TARGETDISTANCE TRGTSPEED TARGETEXISTS
+{3:;"                                        ";""}      X {0:SIP_6.3}m  Y{1:SIP_6.3}m  Z{2:SIP_6.3} $&$ TARGETDISTANCEX TARGETDISTANCEY TARGETDISTANCEZ TARGETEXISTS
+   
+{0:;"                                        ";""}APPROACH DIST $&$ TARGETEXISTS
+{2:;"                                        ";""}     {0:SIP_6.3}m AT[{1:KDT-y:ddd:hh:mm:ss}]$&$ TARGETCLOSESTAPPROACHDISTANCE TARGETCLOSESTAPPROACHTIME TARGETEXISTS
+
+         1-9:Camera 1-9 0:Docking Camera

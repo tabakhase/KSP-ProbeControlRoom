@@ -1,0 +1,20 @@
+               Flight Menu
+
+
+
+        1: Primary Flight Display
+        2: Orbit Assistant
+        3: Takeoff Assistant
+        4: Landing Assistant
+
+
+
+
+
+
+
+
+
+
+
+KMCT 1.0

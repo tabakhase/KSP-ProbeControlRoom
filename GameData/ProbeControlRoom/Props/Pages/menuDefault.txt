@@ -1,0 +1,20 @@
+               Main Menu
+
+
+               A: Flight
+               B: Info
+               C: Cameras
+               D: Target
+               E: Plugins
+
+
+
+
+
+
+
+
+
+
+
+KMCT 1.0

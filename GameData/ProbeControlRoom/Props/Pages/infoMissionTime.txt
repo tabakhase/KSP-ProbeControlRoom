@@ -1,0 +1,2 @@
+[@x4][@y8]     {0:KDTyyy:ddd:hh:mm:ss} $&$ METSECS 
+                                        

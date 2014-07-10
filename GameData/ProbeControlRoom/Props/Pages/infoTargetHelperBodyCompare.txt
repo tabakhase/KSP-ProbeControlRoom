@@ -1,0 +1,20 @@
+                 Target
+   
+{0:;"[#ff5050ff]              [NO TARGET]               ";""}INTERCEPT [{1}]   $&$ TARGETEXISTS TARGETNAME
+{0:;"                                        ";""}  AEROBRAKE BELOW {1:SIP_6.3}m  $&$ TARGETBODYATMOSPHERE ORBITBODYATMOSPHERETOP
+   
+{0:;"                                        ";""}DISTANCE $&$TARGETEXISTS
+{2:;"                                        ";""}  TOTAL {0:SIP_6.3}m  AT  {1:SIP_6.3}m/s$&$ TARGETDISTANCE TRGTSPEED TARGETEXISTS
+{3:;"                                        ";""}      X {0:SIP_6.3}m  Y{1:SIP_6.3}m  Z{2:SIP_6.3} $&$ TARGETDISTANCEX TARGETDISTANCEY TARGETDISTANCEZ TARGETEXISTS
+   
+{0:;"                                        ";""}APPROACH DIST $&$ TARGETEXISTS
+{2:;"                                        ";""}     {0:SIP_6.3}m AT[{1:KDT-y:ddd:hh:mm:ss}]$&$ TARGETCLOSESTAPPROACHDISTANCE TARGETCLOSESTAPPROACHTIME TARGETEXISTS
+   
+{0:;"                                        ";""}RELATIVE INCL $&$ TARGETEXISTS
+{1:;"                                        ";""}       {0:0.000}° $&$RELATIVEINCLINATION TARGETEXISTS
+   
+{0:;"                                        ";""}TIME UNTIL $&$ TARGETEXISTS
+{1:;"                                        ";""}    AscN[{0:KDT-y:ddd:hh:mm:ss}]$&$ TIMETOANWITHTARGETSECS TARGETEXISTS
+{1:;"                                        ";""}    DesN[{0:KDT-y:ddd:hh:mm:ss}]$&$ TIMETODNWITHTARGETSECS TARGETEXISTS
+   
+                         9:TARGT 0:CLOSE  
