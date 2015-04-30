@@ -17,6 +17,8 @@ namespace ProbeControlRoom
 		private ProbeControlRoomPart aModule;
 		private Part aPart;
 		private Part aPartRestartTo = null;
+		private float OldCameraFx = 0;
+
 
 
 		public void Start()
@@ -105,8 +107,11 @@ namespace ProbeControlRoom
 
 				CameraManager.ICameras_DeactivateAll ();
 
+				OldCameraFx = GameSettings.CAMERA_FX_INTERNAL;
+				GameSettings.CAMERA_FX_INTERNAL = 0;
 				FlightCamera.fetch.EnableCamera ();
 				FlightCamera.fetch.DeactivateUpdate ();
+
 				FlightCamera.fetch.gameObject.SetActive (true);
 				FlightEVA.fetch.DisableInterface ();
 
@@ -138,6 +143,7 @@ namespace ProbeControlRoom
 
 		public void stopIVA() 
 		{
+			GameSettings.CAMERA_FX_INTERNAL = OldCameraFx;
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] stopIVA()");
 			isActive = false;
 			aModule = null;
