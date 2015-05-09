@@ -37,6 +37,7 @@ namespace ProbeControlRoom
 
 		public void OnDestroy()
 		{
+			GameSettings.CAMERA_FX_INTERNAL = OldCameraFx;
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] OnDestroy()");
 			GameEvents.onVesselChange.Remove(OnVesselChange);
 			GameEvents.onVesselWasModified.Remove(OnVesselModified);
