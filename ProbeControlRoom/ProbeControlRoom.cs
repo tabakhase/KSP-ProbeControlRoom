@@ -188,12 +188,14 @@ namespace ProbeControlRoom
 							aPartRestartTo = aPart;
 						stopIVA ();
 					}
-					if (!MapView.MapIsEnabled && Input.GetKeyDown (GameSettings.CAMERA_MODE.primary)) {
+					if( !MapView.MapIsEnabled && Input.GetKeyDown( GameSettings.CAMERA_MODE.primary ) && InputLockManager.IsUnlocked( ControlTypes.CAMERAMODES ) )
+					{
 						ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - CAMERA_MODE.key seen, stopIVA()");
 						stopIVA ();
 					}
 				} else {
-					if (!vesselCanStockIVA && !MapView.MapIsEnabled && Input.GetKeyDown (GameSettings.CAMERA_MODE.primary)) {
+					if( !vesselCanStockIVA && !MapView.MapIsEnabled && Input.GetKeyDown( GameSettings.CAMERA_MODE.primary ) && InputLockManager.IsUnlocked( ControlTypes.CAMERAMODES ) )
+					{
 						ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - CAMERA_MODE.key seen, startIVA()");
 						startIVA ();
 					}

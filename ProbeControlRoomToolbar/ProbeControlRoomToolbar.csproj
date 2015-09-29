@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6BB6BF04-C58F-47EE-A4BB-3CADA7850606}</ProjectGuid>
+    <ProjectGuid>{6AFE8820-5545-4EB0-9D8B-E2FC32758FC9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>ProbeControlRoomToolbar</RootNamespace>
     <AssemblyName>ProbeControlRoomToolbar</AssemblyName>
@@ -38,18 +38,20 @@
     </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\Program Files %28x86%29\Steam\SteamApps\common\Kerbal Space Program\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\..\Program Files %28x86%29\Steam\SteamApps\common\Kerbal Space Program\KSP_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
     <Reference Include="aaa_Toolbar">
-      <HintPath>..\GameData\000_Toolbar\Toolbar.dll</HintPath>
+      <HintPath>..\..\ksp_toolbar-master\Toolbar\obj\Debug\aaa_Toolbar.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Games\KSP\KSP-Real\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
     <Reference Include="ProbeControlRoom">
       <HintPath>..\GameData\ProbeControlRoom\ProbeControlRoom.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Games\KSP\KSP-Real\KSP_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
