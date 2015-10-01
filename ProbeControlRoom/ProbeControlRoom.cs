@@ -17,6 +17,8 @@ namespace ProbeControlRoom
 		private ProbeControlRoomPart aModule;
 		private Part aPart;
 		private Part aPartRestartTo = null;
+		private float OldCameraFx = 0;
+
 
 
 		public void Start()
@@ -35,6 +37,7 @@ namespace ProbeControlRoom
 
 		public void OnDestroy()
 		{
+			GameSettings.CAMERA_FX_INTERNAL = OldCameraFx;
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] OnDestroy()");
 			GameEvents.onVesselChange.Remove(OnVesselChange);
 			GameEvents.onVesselWasModified.Remove(OnVesselModified);
@@ -105,8 +108,11 @@ namespace ProbeControlRoom
 
 				CameraManager.ICameras_DeactivateAll ();
 
+				OldCameraFx = GameSettings.CAMERA_FX_INTERNAL;
+				GameSettings.CAMERA_FX_INTERNAL = 0;
 				FlightCamera.fetch.EnableCamera ();
 				FlightCamera.fetch.DeactivateUpdate ();
+
 				FlightCamera.fetch.gameObject.SetActive (true);
 				FlightEVA.fetch.DisableInterface ();
 
@@ -138,6 +144,7 @@ namespace ProbeControlRoom
 
 		public void stopIVA() 
 		{
+			GameSettings.CAMERA_FX_INTERNAL = OldCameraFx;
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] stopIVA()");
 			isActive = false;
 			aModule = null;
@@ -181,12 +188,14 @@ namespace ProbeControlRoom
 							aPartRestartTo = aPart;
 						stopIVA ();
 					}
-					if (!MapView.MapIsEnabled && Input.GetKeyDown (GameSettings.CAMERA_MODE.primary)) {
+					if( !MapView.MapIsEnabled && Input.GetKeyDown( GameSettings.CAMERA_MODE.primary ) && InputLockManager.IsUnlocked( ControlTypes.CAMERAMODES ) )
+					{
 						ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - CAMERA_MODE.key seen, stopIVA()");
 						stopIVA ();
 					}
 				} else {
-					if (!vesselCanStockIVA && !MapView.MapIsEnabled && Input.GetKeyDown (GameSettings.CAMERA_MODE.primary)) {
+					if( !vesselCanStockIVA && !MapView.MapIsEnabled && Input.GetKeyDown( GameSettings.CAMERA_MODE.primary ) && InputLockManager.IsUnlocked( ControlTypes.CAMERAMODES ) )
+					{
 						ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - CAMERA_MODE.key seen, startIVA()");
 						startIVA ();
 					}
