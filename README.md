@@ -12,15 +12,15 @@ Features
 	
 Requires
 ----------
-	- [ModuleManager](http://forum.kerbalspaceprogram.com/threads/55219) >= v2.1.5
-	- (optional) [Toolbar](http://forum.kerbalspaceprogram.com/threads/60863) >= v1.7.3
+	- [ModuleManager](http://forum.kerbalspaceprogram.com/threads/55219) >= v2.6.8
+	- (optional) [Toolbar](http://forum.kerbalspaceprogram.com/threads/60863) >= v1.7.9
 
 For RasterPropMonitor
 ----------
-	- [RasterPropMonitor](http://forum.kerbalspaceprogram.com/threads/57603) >= v0.17
-	- (optional) [VesselView](http://forum.kerbalspaceprogram.com/threads/80581) >= v0.5.1
-	- (optional) [MechJeb2](http://forum.kerbalspaceprogram.com/threads/12384) >= v2.2.1.254
-	- (optional) [SCANsat](http://forum.kerbalspaceprogram.com/threads/80369) >= v6.0
+	- [RasterPropMonitor](http://forum.kerbalspaceprogram.com/threads/117471) >= v0.23
+	- (optional) [VesselView](http://forum.kerbalspaceprogram.com/threads/80581) >= v0.71
+	- (optional) [MechJeb2](http://forum.kerbalspaceprogram.com/threads/124336) >= v2.5.3
+	- (optional) [SCANsat](http://forum.kerbalspaceprogram.com/threads/80369) >= v14.2
 
 
 How to use
@@ -35,18 +35,36 @@ How to use
 	 d. click the IVA button in the toolbar (if installed)
 
 	 
+Extended
+----------
+	On the first start a config file is created at GameData/ProbeControlRoom/Settings.cfg
+	ForcePCROnly (default: False)
+		forces the use of PCR
+		- UI/Toolbar buttons to overwrite
+		- Traps mapView and "Camera"-Key
+	DisableWobble (default: True)
+		disables the cameraShake when inside a PCR
+	DisableSounds (default: False) [ALPHA - CurrentMethod (GameSettings-Volume) not stable]
+		disables the Ship_Audio when inside a PCR
+		- Seems to ignore Engines, Staging, Parachutes and similar, while explosions get muted.
+		- With ForcePCROnly=True muting works, but always for every rocket with a PCR...
+
+
 Thanks
 -------
 	- G'th for the idea&kick to actually do it
 	- all the KSP modders putting tons of sourcecode out there to read & learn
 	- the folks in the #kspmodders irc that linked me there ;-)
 	- "Albert VDS" for the excelent work hes done on the 3D Model/Textures/Pages
+	- "Dexter9313" and "Z-Key Aerospace" for the pull-requests regarding Wobble&Audio removal
+	- "MeCripp", "jlcarneiro" and again "Z-Key Aerospace" & "Dexter9313" for providing updates while i could not
 	
 	
 Authors
 -------
 	Christian 'Tabakhase' Hackmann	(mail <at> tabakhase.com) - PluginCode
 	'Albert VDS' - 3D & Textures of MissionControl
+	And various community members.
 	
 	
 License
