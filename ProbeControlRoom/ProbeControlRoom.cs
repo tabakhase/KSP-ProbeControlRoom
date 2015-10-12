@@ -18,6 +18,15 @@ namespace ProbeControlRoom
 		private Part aPart;
 		private Part aPartRestartTo = null;
 
+		float shipVolumeBackup = GameSettings.SHIP_VOLUME;
+		float ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
+		//float musicVolumeBackup = GameSettings.MUSIC_VOLUME;
+		//float uiVolumeBackup = GameSettings.UI_VOLUME;
+		//float voiceVolumeBackup = GameSettings.VOICE_VOLUME;
+
+		float cameraWobbleBackup = GameSettings.FLT_CAMERA_WOBBLE;
+		float cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
+		float cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
 
 		public void Start()
 		{
@@ -39,6 +48,23 @@ namespace ProbeControlRoom
 
 		public void OnDestroy()
 		{
+			//in case of revert to launch while in IVA, Update() won't detect it
+			//and startIVA(p) will be called without prior stopIVA
+			//which will cause settings to be lost forever
+			//OnDestroy() will be called though
+
+			//re-enable sound
+			GameSettings.SHIP_VOLUME = shipVolumeBackup;
+			GameSettings.AMBIENCE_VOLUME = ambianceVolumeBackup;
+			//GameSettings.MUSIC_VOLUME = musicVolumeBackup;
+			//GameSettings.UI_VOLUME = uiVolumeBackup;
+			//GameSettings.VOICE_VOLUME = voiceVolumeBackup;
+
+			//re-enable camera wobble
+			GameSettings.FLT_CAMERA_WOBBLE = cameraWobbleBackup;
+			GameSettings.CAMERA_FX_INTERNAL = cameraFXInternalBackup;
+			GameSettings.CAMERA_FX_EXTERNAL = cameraFXExternalBackup;
+
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] OnDestroy()");
 			GameEvents.onVesselChange.Remove(OnVesselChange);
 			GameEvents.onVesselWasModified.Remove(OnVesselModified);
@@ -107,6 +133,29 @@ namespace ProbeControlRoom
 
 				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] startIVA(Part) - fire up IVA");
 
+				//disable sound
+				shipVolumeBackup = GameSettings.SHIP_VOLUME;
+				ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
+				//musicVolumeBackup = GameSettings.MUSIC_VOLUME;
+				//uiVolumeBackup = GameSettings.UI_VOLUME;
+				//voiceVolumeBackup = GameSettings.VOICE_VOLUME;
+
+				GameSettings.SHIP_VOLUME = 0;
+				GameSettings.AMBIENCE_VOLUME = 0;
+				//GameSettings.MUSIC_VOLUME = 0;
+				//GameSettings.UI_VOLUME = 0;
+				//GameSettings.VOICE_VOLUME = 0;
+
+				//disable camera wobble
+				cameraWobbleBackup = GameSettings.FLT_CAMERA_WOBBLE;
+				cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
+				cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
+
+				GameSettings.FLT_CAMERA_WOBBLE = 0;
+				GameSettings.CAMERA_FX_INTERNAL = 0;
+				GameSettings.CAMERA_FX_EXTERNAL = 0;
+
+
 				CameraManager.ICameras_DeactivateAll ();
 
 				FlightCamera.fetch.EnableCamera ();
@@ -146,6 +195,19 @@ namespace ProbeControlRoom
 			isActive = false;
 			aModule = null;
 			aPart = null;
+
+			//re-enable sound
+			GameSettings.SHIP_VOLUME = shipVolumeBackup;
+			GameSettings.AMBIENCE_VOLUME = ambianceVolumeBackup;
+			//GameSettings.MUSIC_VOLUME = musicVolumeBackup;
+			//GameSettings.UI_VOLUME = uiVolumeBackup;
+			//GameSettings.VOICE_VOLUME = voiceVolumeBackup;
+
+			//re-enable camera wobble
+			GameSettings.FLT_CAMERA_WOBBLE = cameraWobbleBackup;
+			GameSettings.CAMERA_FX_INTERNAL = cameraFXInternalBackup;
+			GameSettings.CAMERA_FX_EXTERNAL = cameraFXExternalBackup;
+
 			CameraManager.ICameras_DeactivateAll ();
 
 			CameraManager.Instance.SetCameraFlight();
