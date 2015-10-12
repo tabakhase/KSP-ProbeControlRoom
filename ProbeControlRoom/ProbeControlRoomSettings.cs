@@ -19,7 +19,7 @@ namespace ProbeControlRoom
 		// UI and Toolbar can overrule this!
 		[Persistent] public bool ForcePCROnly = false;
 		[Persistent] public bool DisableWobble = true;
-		[Persistent] public bool DisableSounds = true;
+		[Persistent] public bool DisableSounds = false;
 		
 		private static String File { 
 			get { return KSPUtil.ApplicationRootPath + "/GameData/ProbeControlRoom/Settings.cfg"; }
