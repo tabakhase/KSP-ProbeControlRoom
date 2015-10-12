@@ -31,6 +31,10 @@ namespace ProbeControlRoom
 			GameEvents.onVesselChange.Add(OnVesselChange);
 			GameEvents.onVesselWasModified.Add(OnVesselModified);
 			refreshVesselRooms ();
+			if (ProbeControlRoomSettings.Instance.ForcePCROnly) {
+				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] Start() - ForcePCROnly Enabled.");
+				startIVA ();
+			}
 		}
 
 		public void OnDestroy()
@@ -167,6 +171,10 @@ namespace ProbeControlRoom
 					if (CameraManager.Instance.currentCameraMode == CameraManager.CameraMode.IVA) {
 						ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - real IVA detected, ending...");
 						stopIVA ();
+						if (ProbeControlRoomSettings.Instance.ForcePCROnly) {
+							ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - real IVA detected, ending... KILLED - ForcePCROnly Enabled.");
+							startIVA ();
+						}
 					}
 					if (!MapView.MapIsEnabled && !InternalCamera.Instance.isActive) {
 						ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - IVA broke, kill and maybe restart...");
@@ -179,11 +187,19 @@ namespace ProbeControlRoom
 						// has No IVA and kerbal     		== OK    (Lab)
 						if (!vesselCanStockIVA)
 							aPartRestartTo = aPart;
+						if (ProbeControlRoomSettings.Instance.ForcePCROnly) {
+							ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - IVA broke, kill and maybe restart... OVERWRITE - ForcePCROnly Enabled.");
+							aPartRestartTo = aPart;
+						}
 						stopIVA ();
 					}
 					if (!MapView.MapIsEnabled && Input.GetKeyDown (GameSettings.CAMERA_MODE.primary)) {
 						ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - CAMERA_MODE.key seen, stopIVA()");
-						stopIVA ();
+						if (ProbeControlRoomSettings.Instance.ForcePCROnly) {
+							ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - CAMERA_MODE.key seen, stopIVA() KILLED - ForcePCROnly Enabled.");
+						} else {
+							stopIVA ();
+						}
 					}
 				} else {
 					if (!vesselCanStockIVA && !MapView.MapIsEnabled && Input.GetKeyDown (GameSettings.CAMERA_MODE.primary)) {

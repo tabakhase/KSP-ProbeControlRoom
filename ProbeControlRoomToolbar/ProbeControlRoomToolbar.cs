@@ -21,6 +21,7 @@ namespace ProbeControlRoomToolbar
 				this.button.OnClick += (e) =>
 				{
 					if (ProbeControlRoom.ProbeControlRoom.isActive) {
+						// ignore ProbeControlRoomSettings..ForcePCROnly on purpose
 						ProbeControlRoom.ProbeControlRoom.Instance.stopIVA ();
 					} else {
 						ProbeControlRoom.ProbeControlRoom.Instance.startIVA ();

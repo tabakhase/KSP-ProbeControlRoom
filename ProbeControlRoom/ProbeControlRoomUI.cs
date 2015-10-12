@@ -93,6 +93,7 @@ namespace ProbeControlRoom
 			if (scene == GameScenes.FLIGHT && !toolbarIsActive) {
 				if (ProbeControlRoom.vesselCanIVA && !hideUIState && !MapView.MapIsEnabled) {
 					GUILayout.BeginArea (ivaButtonPosition, windowIVAButtStyle);
+					// ignore ProbeControlRoomSettings..ForcePCROnly on purpose
 					if (ProbeControlRoom.isActive) {
 						if (GUILayout.Button ("End IVA", windowIVAButtButtonStyle)) {
 							ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom][ProbeControlRoomUI] OnGUI().Button(End IVA)");
