@@ -40,6 +40,18 @@ namespace ProbeControlRoom
 			GameEvents.onVesselChange.Add(OnVesselChange);
 			GameEvents.onVesselWasModified.Add(OnVesselModified);
 			refreshVesselRooms ();
+
+			// TODO: check for cfg file with cached vars, if (after crash) load it and use those as defaults
+			shipVolumeBackup = GameSettings.SHIP_VOLUME;
+			ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
+			//musicVolumeBackup = GameSettings.MUSIC_VOLUME;
+			//uiVolumeBackup = GameSettings.UI_VOLUME;
+			//voiceVolumeBackup = GameSettings.VOICE_VOLUME;
+
+			cameraWobbleBackup = GameSettings.FLT_CAMERA_WOBBLE;
+			cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
+			cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
+
 			if (ProbeControlRoomSettings.Instance.ForcePCROnly) {
 				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] Start() - ForcePCROnly Enabled.");
 				startIVA ();
@@ -53,17 +65,24 @@ namespace ProbeControlRoom
 			//which will cause settings to be lost forever
 			//OnDestroy() will be called though
 
-			//re-enable sound
-			GameSettings.SHIP_VOLUME = shipVolumeBackup;
-			GameSettings.AMBIENCE_VOLUME = ambianceVolumeBackup;
-			//GameSettings.MUSIC_VOLUME = musicVolumeBackup;
-			//GameSettings.UI_VOLUME = uiVolumeBackup;
-			//GameSettings.VOICE_VOLUME = voiceVolumeBackup;
+			if (ProbeControlRoomSettings.Instance.DisableSounds) {
+				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnDestroy() - DisableSounds - RESTORE");
+				//re-enable sound
+				GameSettings.SHIP_VOLUME = shipVolumeBackup;
+				GameSettings.AMBIENCE_VOLUME = ambianceVolumeBackup;
+				//GameSettings.MUSIC_VOLUME = musicVolumeBackup;
+				//GameSettings.UI_VOLUME = uiVolumeBackup;
+				//GameSettings.VOICE_VOLUME = voiceVolumeBackup;
+			}
 
-			//re-enable camera wobble
-			GameSettings.FLT_CAMERA_WOBBLE = cameraWobbleBackup;
-			GameSettings.CAMERA_FX_INTERNAL = cameraFXInternalBackup;
-			GameSettings.CAMERA_FX_EXTERNAL = cameraFXExternalBackup;
+			if (ProbeControlRoomSettings.Instance.DisableWobble) {
+				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnDestroy() - DisableWobble - RESTORE");
+				//re-enable camera wobble
+				GameSettings.FLT_CAMERA_WOBBLE = cameraWobbleBackup;
+				GameSettings.CAMERA_FX_INTERNAL = cameraFXInternalBackup;
+				GameSettings.CAMERA_FX_EXTERNAL = cameraFXExternalBackup;
+			}
+			// TODO: remove cfg file with cached vars, no crash and reseted, no need to keep
 
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] OnDestroy()");
 			GameEvents.onVesselChange.Remove(OnVesselChange);
@@ -140,21 +159,27 @@ namespace ProbeControlRoom
 				//uiVolumeBackup = GameSettings.UI_VOLUME;
 				//voiceVolumeBackup = GameSettings.VOICE_VOLUME;
 
-				GameSettings.SHIP_VOLUME = 0;
-				GameSettings.AMBIENCE_VOLUME = 0;
-				//GameSettings.MUSIC_VOLUME = 0;
-				//GameSettings.UI_VOLUME = 0;
-				//GameSettings.VOICE_VOLUME = 0;
+				if (ProbeControlRoomSettings.Instance.DisableSounds) {
+					ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] startIVA(Part) - DisableSounds");
+					GameSettings.SHIP_VOLUME = 0f;
+					GameSettings.AMBIENCE_VOLUME = 0;
+					GameSettings.MUSIC_VOLUME = 0;
+					GameSettings.UI_VOLUME = 0;
+					GameSettings.VOICE_VOLUME = 0;
+				}
 
 				//disable camera wobble
 				cameraWobbleBackup = GameSettings.FLT_CAMERA_WOBBLE;
 				cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
 				cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
 
-				GameSettings.FLT_CAMERA_WOBBLE = 0;
-				GameSettings.CAMERA_FX_INTERNAL = 0;
-				GameSettings.CAMERA_FX_EXTERNAL = 0;
-
+				if (ProbeControlRoomSettings.Instance.DisableWobble) {
+					ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] startIVA(Part) - DisableWobble");
+					GameSettings.FLT_CAMERA_WOBBLE = 0;
+					GameSettings.CAMERA_FX_INTERNAL = 0;
+					GameSettings.CAMERA_FX_EXTERNAL = 0;
+				}
+				// TODO: create cfg file with cached vars, on crash to be restored
 
 				CameraManager.ICameras_DeactivateAll ();
 
@@ -196,17 +221,23 @@ namespace ProbeControlRoom
 			aModule = null;
 			aPart = null;
 
-			//re-enable sound
-			GameSettings.SHIP_VOLUME = shipVolumeBackup;
-			GameSettings.AMBIENCE_VOLUME = ambianceVolumeBackup;
-			//GameSettings.MUSIC_VOLUME = musicVolumeBackup;
-			//GameSettings.UI_VOLUME = uiVolumeBackup;
-			//GameSettings.VOICE_VOLUME = voiceVolumeBackup;
+			if (ProbeControlRoomSettings.Instance.DisableSounds) {
+				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] stopIVA() - DisableSounds - RESTORE");
+				//re-enable sound
+				GameSettings.SHIP_VOLUME = shipVolumeBackup;
+				GameSettings.AMBIENCE_VOLUME = ambianceVolumeBackup;
+				//GameSettings.MUSIC_VOLUME = musicVolumeBackup;
+				//GameSettings.UI_VOLUME = uiVolumeBackup;
+				//GameSettings.VOICE_VOLUME = voiceVolumeBackup;
+			}
 
-			//re-enable camera wobble
-			GameSettings.FLT_CAMERA_WOBBLE = cameraWobbleBackup;
-			GameSettings.CAMERA_FX_INTERNAL = cameraFXInternalBackup;
-			GameSettings.CAMERA_FX_EXTERNAL = cameraFXExternalBackup;
+			if (ProbeControlRoomSettings.Instance.DisableWobble) {
+				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] stopIVA() - DisableWobble - RESTORE");
+				//re-enable camera wobble
+				GameSettings.FLT_CAMERA_WOBBLE = cameraWobbleBackup;
+				GameSettings.CAMERA_FX_INTERNAL = cameraFXInternalBackup;
+				GameSettings.CAMERA_FX_EXTERNAL = cameraFXExternalBackup;
+			}
 
 			CameraManager.ICameras_DeactivateAll ();
 
