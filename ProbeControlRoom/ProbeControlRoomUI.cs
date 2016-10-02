@@ -62,23 +62,23 @@ namespace ProbeControlRoom
 			windowIVAButtStyle = new GUIStyle ();
 
 			windowIVAButtButtonStyle = new GUIStyle (HighLogic.Skin.button);
-
-			if (GameSettings.UI_SIZE >= 990) {
+            
+			if (GameSettings.UI_SCALE >= 990) {
 				ivaButtonPosition = new Rect (Screen.width-2 - 120, Screen.height-4-30 - 142, 111, 30);
 			}
-			if (GameSettings.UI_SIZE == 900) {
+			if (GameSettings.UI_SCALE == 900) {
 				ivaButtonPosition = new Rect (Screen.width-2 - 115, Screen.height-4-30 - 133, 107, 30);
 			}
-			if (GameSettings.UI_SIZE == 840) {
+			if (GameSettings.UI_SCALE == 840) {
 				ivaButtonPosition = new Rect (Screen.width-2 - 106, Screen.height-4-30 - 124, 96, 30);
 			}
-			if (GameSettings.UI_SIZE == 768) {
+			if (GameSettings.UI_SCALE == 768) {
 				ivaButtonPosition = new Rect (Screen.width-2 - 96, Screen.height-4-30 - 114, 89, 30);
 			}
-			if (GameSettings.UI_SIZE == 720) {
+			if (GameSettings.UI_SCALE == 720) {
 				ivaButtonPosition = new Rect (Screen.width-2 - 91, Screen.height-4-30 - 108, 84, 30);
 			}
-			if (GameSettings.UI_SIZE <= 680) {
+			if (GameSettings.UI_SCALE <= 680) {
 				ivaButtonPosition = new Rect (Screen.width-2 - 86, Screen.height-4-30 - 102, 79, 30);
 			}
 			if(ivaButtonPosition==null)
