@@ -2,17 +2,19 @@ using System;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using KSP.UI.Screens;
 
 
 namespace ProbeControlRoom
 {
-	[KSPAddon(KSPAddon.Startup.Flight, false)]
+    [KSPAddon(KSPAddon.Startup.Flight, false)]
 	public class ProbeControlRoom : MonoBehaviour
 	{
 		public static ProbeControlRoom Instance { get; protected set; }
 		public static bool isActive = false;
 		public List<Part> vesselRooms = new List<Part>();
 		public List<Part> vesselStockIVAs = new List<Part>();
+        
 
 		private ProbeControlRoomPart aModule;
 		private Part aPart;
@@ -27,6 +29,11 @@ namespace ProbeControlRoom
 		float cameraWobbleBackup = GameSettings.FLT_CAMERA_WOBBLE;
 		float cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
 		float cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
+
+        private static ApplicationLauncherButton appLauncherButton = null;
+        private bool AppLauncher = false;
+        private Texture2D IconActivate = null;
+        private Texture2D IconDeactivate = null;
 
 		public void Start()
 		{
@@ -52,13 +59,71 @@ namespace ProbeControlRoom
 			cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
 			cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
 
-			if (ProbeControlRoomSettings.Instance.ForcePCROnly) {
+
+
+            if (ProbeControlRoomSettings.Instance.ForcePCROnly) {
 				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] Start() - ForcePCROnly Enabled.");
 				startIVA ();
 			}
 		}
 
-		public void OnDestroy()
+        public void OnAwake()
+        {
+            GameEvents.onGUIApplicationLauncherReady.Add(onGUIApplicationLauncherReady);
+        }
+
+        private void onGUIApplicationLauncherReady()
+        {
+            if (!AppLauncher)
+            {
+                appLauncherButton = InitializeApplicationButton();
+                AppLauncher = true;
+            }
+        }
+
+        ApplicationLauncherButton InitializeApplicationButton()
+        {
+            ApplicationLauncherButton Button = null;
+
+            IconActivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/ProbeControlRoomDisabled", false);
+            IconDeactivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/ProbeControlRoomEnabled", false);
+
+
+            Button = ApplicationLauncher.Instance.AddModApplication(
+                OnAppLauncherTrue,
+                OnAppLauncherFalse,
+                null,
+                null,
+                null,
+                null,
+                ApplicationLauncher.AppScenes.FLIGHT,
+                IconActivate);
+
+            if (Button == null)
+            {
+                ProbeControlRoomUtils.Logger.debug("[Probe Control Room] InitializeApplicationButton(): Was unable to initialize button");
+            }
+
+            return Button;
+        }
+
+        void OnAppLauncherTrue()
+        {
+            if(isActive)
+            {
+                startIVA();
+                appLauncherButton.SetTexture(IconDeactivate);
+            }
+        }
+        void OnAppLauncherFalse()
+        {
+            if (!isActive)
+            {
+                stopIVA();
+                appLauncherButton.SetTexture(IconActivate);
+            }
+        }
+        public void OnDestroy()
 		{
 			//in case of revert to launch while in IVA, Update() won't detect it
 			//and startIVA(p) will be called without prior stopIVA
@@ -87,7 +152,13 @@ namespace ProbeControlRoom
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] OnDestroy()");
 			GameEvents.onVesselChange.Remove(OnVesselChange);
 			GameEvents.onVesselWasModified.Remove(OnVesselModified);
-			Instance = null;
+
+            if (appLauncherButton != null)
+            {
+                ApplicationLauncher.Instance.RemoveModApplication(appLauncherButton);
+                appLauncherButton = null;
+            }
+                Instance = null;
 		}
 
 
@@ -183,27 +254,30 @@ namespace ProbeControlRoom
 
 				CameraManager.ICameras_DeactivateAll ();
 
-				FlightCamera.fetch.EnableCamera ();
+                FlightCamera.fetch.EnableCamera ();
 				FlightCamera.fetch.DeactivateUpdate ();
-				FlightCamera.fetch.gameObject.SetActive (true);
-				FlightEVA.fetch.DisableInterface ();
+                FlightCamera.fetch.gameObject.SetActive(true);
+                
 
 				InternalCamera.Instance.SetTransform(actualTransform, true);
 
 				InternalCamera.Instance.EnableCamera ();
-				FlightGlobals.ActiveVessel.SetActiveInternalPart (p.internalModel.part);
-
+				FlightGlobals.ActiveVessel.SetActiveInternalSpace (p.internalModel.part);
+                
 				IVASun sunBehaviour;
 				sunBehaviour = (IVASun)FindObjectOfType(typeof(IVASun));
 				sunBehaviour.enabled = false;
-
+                
+                
 				isActive = true;
 
 				if(UIPartActionController.Instance != null)
 					UIPartActionController.Instance.Deactivate ();
-
+                
+                CameraManager.Instance.SetCameraIVA();
 				CameraManager.Instance.currentCameraMode = CameraManager.CameraMode.Internal;
-
+                
+                
 				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] startIVA(Part) - DONE");
 				return true;
 			} else {
@@ -348,14 +422,21 @@ namespace ProbeControlRoom
 					ProbeControlRoomPart room = p.GetComponent<ProbeControlRoomPart> ();
 					if (room != null) {
 						ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] refreshVesselRooms() - found ProbeControlRoomPart in: " + p.ToString ());
+                        if(p.internalModel == null)
+                        {
+                            p.CreateInternalModel();
+                            
+                        }
+                        
 						InternalModel model = p.internalModel;
-						if (model != null) {
+                        if (model != null) {
 							ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] refreshVesselRooms() - found internalModel in: " + p.ToString ());
 							rooms.Add (p);
 						}
 					}
 
 					InternalModel imodel = p.internalModel;
+                    
 					if (imodel != null) {
 						ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] refreshVesselRooms() - found internalModel in: " + p.ToString ());
 						if (p.protoModuleCrew.Count >= 1) {
