@@ -32,45 +32,46 @@ namespace ProbeControlRoom
 
         private static ApplicationLauncherButton appLauncherButton = null;
         private bool AppLauncher = false;
+        
         private Texture2D IconActivate = null;
         private Texture2D IconDeactivate = null;
 
-		public void Start()
-		{
-			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] Start()");
-			if (Instance != null) {
-				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] Start() - InstanceKill");
-				Destroy (this);
-				return;
-			}
-			Instance = this;
-			GameEvents.onVesselChange.Add(OnVesselChange);
-			GameEvents.onVesselWasModified.Add(OnVesselModified);
-			refreshVesselRooms ();
-
-			// TODO: check for cfg file with cached vars, if (after crash) load it and use those as defaults
-			shipVolumeBackup = GameSettings.SHIP_VOLUME;
-			ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
-			//musicVolumeBackup = GameSettings.MUSIC_VOLUME;
-			//uiVolumeBackup = GameSettings.UI_VOLUME;
-			//voiceVolumeBackup = GameSettings.VOICE_VOLUME;
-
-			cameraWobbleBackup = GameSettings.FLT_CAMERA_WOBBLE;
-			cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
-			cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
-
-
-
-            if (ProbeControlRoomSettings.Instance.ForcePCROnly) {
-				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] Start() - ForcePCROnly Enabled.");
-				startIVA ();
-			}
-		}
-
-        public void OnAwake()
+        public void Start()
         {
+            ProbeControlRoomUtils.Logger.debug("[ProbeControlRoom] Start()");
+            if (Instance != null)
+            {
+                ProbeControlRoomUtils.Logger.debug("[ProbeControlRoom] Start() - InstanceKill");
+                Destroy(this);
+                return;
+            }
+            Instance = this;
+            GameEvents.onVesselChange.Add(OnVesselChange);
+            GameEvents.onVesselWasModified.Add(OnVesselModified);
             GameEvents.onGUIApplicationLauncherReady.Add(onGUIApplicationLauncherReady);
+            refreshVesselRooms();
+
+            // TODO: check for cfg file with cached vars, if (after crash) load it and use those as defaults
+            shipVolumeBackup = GameSettings.SHIP_VOLUME;
+            ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
+            //musicVolumeBackup = GameSettings.MUSIC_VOLUME;
+            //uiVolumeBackup = GameSettings.UI_VOLUME;
+            //voiceVolumeBackup = GameSettings.VOICE_VOLUME;
+
+            cameraWobbleBackup = GameSettings.FLT_CAMERA_WOBBLE;
+            cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
+            cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
+
+
+
+            if (ProbeControlRoomSettings.Instance.ForcePCROnly)
+            {
+                ProbeControlRoomUtils.Logger.message("[ProbeControlRoom] Start() - ForcePCROnly Enabled.");
+                startIVA();
+            }
         }
+       
+       
 
         private void onGUIApplicationLauncherReady()
         {
@@ -85,8 +86,8 @@ namespace ProbeControlRoom
         {
             ApplicationLauncherButton Button = null;
 
-            IconActivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/ProbeControlRoomDisabled", false);
-            IconDeactivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/ProbeControlRoomEnabled", false);
+            IconActivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/ProbeControlRoomToolbarDisabled", false);
+            IconDeactivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/ProbeControlRoomToolbarEnabled", false);
 
 
             Button = ApplicationLauncher.Instance.AddModApplication(
@@ -109,18 +110,18 @@ namespace ProbeControlRoom
 
         void OnAppLauncherTrue()
         {
-            if(isActive)
+            if(!isActive)
             {
                 startIVA();
-                appLauncherButton.SetTexture(IconDeactivate);
+                
             }
         }
         void OnAppLauncherFalse()
         {
-            if (!isActive)
+            if (isActive)
             {
                 stopIVA();
-                appLauncherButton.SetTexture(IconActivate);
+                
             }
         }
         public void OnDestroy()
@@ -276,10 +277,11 @@ namespace ProbeControlRoom
                 
                 CameraManager.Instance.SetCameraIVA();
 				CameraManager.Instance.currentCameraMode = CameraManager.CameraMode.Internal;
-                
-                
+
+               
 				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] startIVA(Part) - DONE");
-				return true;
+                appLauncherButton.SetTexture(IconDeactivate);
+                return true;
 			} else {
 				ProbeControlRoomUtils.Logger.error ("[ProbeControlRoom] startIVA(Part) - Cannot instantiate ProbeControlRoom in this location - Part/ModuleNotFound");
 				throw new ArgumentException("[ProbeControlRoom] startIVA(Part) - Cannot instantiate ProbeControlRoom in this location - Part/ModuleNotFound");
@@ -321,8 +323,8 @@ namespace ProbeControlRoom
 				UIPartActionController.Instance.Activate ();
 
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] stopIVA() - CHECKMARK");
-
-			if (aPartRestartTo != null) {
+            appLauncherButton.SetTexture(IconActivate);
+            if (aPartRestartTo != null) {
 				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] stopIVA() - RestartHook found, fire!");
 				Part aPartRestartToCache = aPartRestartTo;
 				aPartRestartTo = null;
@@ -425,10 +427,13 @@ namespace ProbeControlRoom
                         if(p.internalModel == null)
                         {
                             p.CreateInternalModel();
+                            ProbeControlRoomUtils.Logger.debug("[ProbeControlRoom] refreshVesselRooms() created ProbeControlRoomPart in: " + p.ToString());
                             
                         }
                         
 						InternalModel model = p.internalModel;
+                        model.enabled = true;
+                        
                         if (model != null) {
 							ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] refreshVesselRooms() - found internalModel in: " + p.ToString ());
 							rooms.Add (p);
