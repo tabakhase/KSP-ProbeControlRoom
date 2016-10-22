@@ -48,12 +48,6 @@
     <Reference Include="KSPAssets">
       <HintPath>..\..\..\..\..\..\Development\Kerbal Space Program\KSP_x64_Data\Managed\KSPAssets.dll</HintPath>
     </Reference>
-    <Reference Include="KSPCore">
-      <HintPath>..\..\..\..\..\..\Development\Kerbal Space Program\KSP_x64_Data\Managed\KSPCore.dll</HintPath>
-    </Reference>
-    <Reference Include="KSPUtil">
-      <HintPath>..\..\..\..\..\..\Development\Kerbal Space Program\KSP_x64_Data\Managed\KSPUtil.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

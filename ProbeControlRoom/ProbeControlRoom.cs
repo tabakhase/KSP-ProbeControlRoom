@@ -20,6 +20,7 @@ namespace ProbeControlRoom
 		private Part aPart;
 		private Part aPartRestartTo = null;
 
+
 		float shipVolumeBackup = GameSettings.SHIP_VOLUME;
 		float ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
 		//float musicVolumeBackup = GameSettings.MUSIC_VOLUME;
@@ -32,6 +33,7 @@ namespace ProbeControlRoom
 
         private static ApplicationLauncherButton appLauncherButton = null;
         private bool AppLauncher = false;
+
         
         private Texture2D IconActivate = null;
         private Texture2D IconDeactivate = null;
@@ -46,18 +48,19 @@ namespace ProbeControlRoom
                 return;
             }
             Instance = this;
+            refreshVesselRooms();
+            GameEvents.onVesselWasModified.Fire(FlightGlobals.ActiveVessel);
             GameEvents.onVesselChange.Add(OnVesselChange);
             GameEvents.onVesselWasModified.Add(OnVesselModified);
+            
             GameEvents.onGUIApplicationLauncherReady.Add(onGUIApplicationLauncherReady);
-            refreshVesselRooms();
-
             // TODO: check for cfg file with cached vars, if (after crash) load it and use those as defaults
             shipVolumeBackup = GameSettings.SHIP_VOLUME;
             ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
             //musicVolumeBackup = GameSettings.MUSIC_VOLUME;
             //uiVolumeBackup = GameSettings.UI_VOLUME;
             //voiceVolumeBackup = GameSettings.VOICE_VOLUME;
-
+            
             cameraWobbleBackup = GameSettings.FLT_CAMERA_WOBBLE;
             cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
             cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
@@ -69,8 +72,7 @@ namespace ProbeControlRoom
                 ProbeControlRoomUtils.Logger.message("[ProbeControlRoom] Start() - ForcePCROnly Enabled.");
                 startIVA();
             }
-        }
-       
+        }    
        
 
         private void onGUIApplicationLauncherReady()
@@ -185,6 +187,7 @@ namespace ProbeControlRoom
 
 		public bool startIVA() 
 		{
+            
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] startIVA()");
 			refreshVesselRooms ();
 			if (vesselRooms.Count >= 1) {
@@ -207,7 +210,8 @@ namespace ProbeControlRoom
 			Transform actualTransform;
 
 			refreshVesselRooms ();
-			if(vesselRooms.Contains(p))
+
+            if (vesselRooms.Contains(p))
 			{
 				aModule = p.FindModulesImplementing<ProbeControlRoomPart> ().First ();
 				aPart = p;
@@ -221,9 +225,9 @@ namespace ProbeControlRoom
 				} else {
 					ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] startIVA(Part) - Seat: "+aModule.seatTransformName.ToString());
 				}
-
+                
 				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] startIVA(Part) - fire up IVA");
-
+                
 				//disable sound
 				shipVolumeBackup = GameSettings.SHIP_VOLUME;
 				ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
@@ -253,17 +257,17 @@ namespace ProbeControlRoom
 				}
 				// TODO: create cfg file with cached vars, on crash to be restored
 
-				CameraManager.ICameras_DeactivateAll ();
-
-                FlightCamera.fetch.EnableCamera ();
-				FlightCamera.fetch.DeactivateUpdate ();
-                FlightCamera.fetch.gameObject.SetActive(true);
+				
                 
+//               FlightCamera.fetch.EnableCamera ();
+//	 			 FlightCamera.fetch.DeactivateUpdate ();
+//               FlightCamera.fetch.gameObject.SetActive(true);
+           
 
 				InternalCamera.Instance.SetTransform(actualTransform, true);
 
 				InternalCamera.Instance.EnableCamera ();
-				FlightGlobals.ActiveVessel.SetActiveInternalSpace (p.internalModel.part);
+                
                 
 				IVASun sunBehaviour;
 				sunBehaviour = (IVASun)FindObjectOfType(typeof(IVASun));
@@ -274,13 +278,17 @@ namespace ProbeControlRoom
 
 				if(UIPartActionController.Instance != null)
 					UIPartActionController.Instance.Deactivate ();
-                
-                CameraManager.Instance.SetCameraIVA();
-				CameraManager.Instance.currentCameraMode = CameraManager.CameraMode.Internal;
 
-               
+
+                //                CameraManager.Instance.currentCameraMode = CameraManager.CameraMode.Internal;
+                CameraManager.Instance.SetCameraInternal(p.internalModel, actualTransform);
+                
+                
 				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] startIVA(Part) - DONE");
                 appLauncherButton.SetTexture(IconDeactivate);
+
+                
+                
                 return true;
 			} else {
 				ProbeControlRoomUtils.Logger.error ("[ProbeControlRoom] startIVA(Part) - Cannot instantiate ProbeControlRoom in this location - Part/ModuleNotFound");
@@ -319,8 +327,8 @@ namespace ProbeControlRoom
 
 			CameraManager.Instance.SetCameraFlight();
 
-			if(UIPartActionController.Instance != null)
-				UIPartActionController.Instance.Activate ();
+            if (UIPartActionController.Instance != null)
+                UIPartActionController.Instance.Activate();
 
 			ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] stopIVA() - CHECKMARK");
             appLauncherButton.SetTexture(IconActivate);
@@ -337,15 +345,15 @@ namespace ProbeControlRoom
 			var scene = HighLogic.LoadedScene;
 			if (scene == GameScenes.FLIGHT) {
 				if (isActive) {
-					if (CameraManager.Instance.currentCameraMode == CameraManager.CameraMode.IVA) {
+/*      				if (CameraManager.Instance.currentCameraMode == CameraManager.CameraMode.IVA) {
 						ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - real IVA detected, ending...");
 						stopIVA ();
 						if (ProbeControlRoomSettings.Instance.ForcePCROnly) {
 							ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - real IVA detected, ending... KILLED - ForcePCROnly Enabled.");
 							startIVA ();
 						}
-					}
-					if (!MapView.MapIsEnabled && !InternalCamera.Instance.isActive) {
+    				}
+*/					if (!MapView.MapIsEnabled && !InternalCamera.Instance.isActive) {
 						ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] OnUpdate() - IVA broke, kill and maybe restart...");
 						// TODO directReturn from map is broken in case vessel has a "real IVA"
 						// Has IVA and no kerbal     		== OK    (cockpit)
@@ -395,7 +403,7 @@ namespace ProbeControlRoom
 		}
 		private void OnVesselModified(Vessel v)
 		{
-			ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] onVesselWasModified(Vessel)");
+            ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] onVesselWasModified(Vessel)");
 			refreshVesselRooms ();
 			if (isActive) {
 				if (vesselCanIVA) {
@@ -427,17 +435,19 @@ namespace ProbeControlRoom
                         if(p.internalModel == null)
                         {
                             p.CreateInternalModel();
+                            
                             ProbeControlRoomUtils.Logger.debug("[ProbeControlRoom] refreshVesselRooms() created ProbeControlRoomPart in: " + p.ToString());
                             
                         }
                         
 						InternalModel model = p.internalModel;
                         model.enabled = true;
+
                         
                         if (model != null) {
 							ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] refreshVesselRooms() - found internalModel in: " + p.ToString ());
 							rooms.Add (p);
-						}
+                        }
 					}
 
 					InternalModel imodel = p.internalModel;
@@ -451,7 +461,7 @@ namespace ProbeControlRoom
 					}
 				}
 				ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom] refreshVesselRooms() - scanned vessel: " + vessel.ToString () + " - rooms: " + rooms.Count.ToString () + " - stockIVAs: " + stockIVAs.Count.ToString ());
-				vesselRooms = rooms;
+				ProbeControlRoom.Instance.vesselRooms = rooms;
 				vesselStockIVAs = stockIVAs;
 			} else {
 				ProbeControlRoomUtils.Logger.debug ("[ProbeControlRoom] refreshVesselRooms() - no valid vessel");
