@@ -43,7 +43,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="Toolbar">
-      <HintPath>..\..\..\..\..\..\Development\Kerbal Space Program\GameData\000_Toolbar\Toolbar.dll</HintPath>
+      <HintPath>F:\Development\Kerbal Space Program\GameData\000_Toolbar\Toolbar.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\Development\Kerbal Space Program\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
