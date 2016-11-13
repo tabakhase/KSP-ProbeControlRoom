@@ -12,15 +12,13 @@ Features
 	
 Requires
 ----------
-	- [ModuleManager](http://forum.kerbalspaceprogram.com/threads/55219) >= v2.6.8
-	- (optional) [Toolbar](http://forum.kerbalspaceprogram.com/threads/60863) >= v1.7.9
+	- [ModuleManager](http://forum.kerbalspaceprogram.com/threads/55219) >= v2.7.3
+	- (optional) [Toolbar](http://forum.kerbalspaceprogram.com/threads/60863) >= v1.7.13
 
 For RasterPropMonitor
 ----------
-	- [RasterPropMonitor](http://forum.kerbalspaceprogram.com/threads/117471) >= v0.23
-	- (optional) [VesselView](http://forum.kerbalspaceprogram.com/threads/80581) >= v0.71
-	- (optional) [MechJeb2](http://forum.kerbalspaceprogram.com/threads/124336) >= v2.5.3
-	- (optional) [SCANsat](http://forum.kerbalspaceprogram.com/threads/80369) >= v14.2
+	- [RasterPropMonitor](http://forum.kerbalspaceprogram.com/threads/117471) >= v0.28
+	- (optional) [SCANsat](http://forum.kerbalspaceprogram.com/threads/80369) >= v1.1.6.11
 
 
 How to use
@@ -62,7 +60,8 @@ Thanks
 	
 Authors
 -------
-	Christian 'Tabakhase' Hackmann	(mail <at> tabakhase.com) - PluginCode
+	Current Maintainer: IceDown
+	Original Author: Christian 'Tabakhase' Hackmann	(mail <at> tabakhase.com) - PluginCode
 	'Albert VDS' - 3D & Textures of MissionControl
 	And various community members.
 	
