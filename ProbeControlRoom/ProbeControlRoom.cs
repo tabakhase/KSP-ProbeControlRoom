@@ -461,7 +461,6 @@ namespace ProbeControlRoom
                                 p.internalModel.SetVisible(false);
                             }
                             ProbeControlRoomUtils.Logger.debug("[ProbeControlRoom] refreshVesselRooms() created ProbeControlRoomPart in: " + p.ToString());
-                            
                         }
                         
 						InternalModel model = p.internalModel;
