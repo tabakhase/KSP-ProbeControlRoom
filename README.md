@@ -1,7 +1,5 @@
 ProbeControlRoom
 =========
-KSP-Forum Thread: [forum.kerbalspaceprogram.com/threads/67450](http://forum.kerbalspaceprogram.com/threads/67450-WIP-IVA-PLUGIN-ProbeControlRoom-IVA-All-the-things)
-
 
 Features
 --------
