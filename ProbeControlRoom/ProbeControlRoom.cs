@@ -127,9 +127,6 @@ namespace ProbeControlRoom
                 //re-enable sound
                 GameSettings.SHIP_VOLUME = shipVolumeBackup;
                 GameSettings.AMBIENCE_VOLUME = ambianceVolumeBackup;
-                //GameSettings.MUSIC_VOLUME = musicVolumeBackup;
-                //GameSettings.UI_VOLUME = uiVolumeBackup;
-                //GameSettings.VOICE_VOLUME = voiceVolumeBackup;
             }
 
             if (ProbeControlRoomSettings.Instance.DisableWobble)
@@ -140,7 +137,6 @@ namespace ProbeControlRoom
                 GameSettings.CAMERA_FX_INTERNAL = cameraFXInternalBackup;
                 GameSettings.CAMERA_FX_EXTERNAL = cameraFXExternalBackup;
             }
-            // TODO: remove cfg file with cached vars, no crash and reseted, no need to keep
 
             ProbeControlRoomUtils.Logger.debug("OnDestroy()");
             GameEvents.onVesselChange.Remove(OnVesselChange);
@@ -182,7 +178,6 @@ namespace ProbeControlRoom
                 return false;
             }
 
-            //			refreshVesselRooms (false);
             if (aPart == null)
             {
                 ProbeControlRoomUtils.Logger.message("startIVA() Lost our part, refreshing");
@@ -213,10 +208,6 @@ namespace ProbeControlRoom
             //disable sound
             shipVolumeBackup = GameSettings.SHIP_VOLUME;
             ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
-            //musicVolumeBackup = GameSettings.MUSIC_VOLUME;
-            //uiVolumeBackup = GameSettings.UI_VOLUME;
-            //voiceVolumeBackup = GameSettings.VOICE_VOLUME;
-
             if (ProbeControlRoomSettings.Instance.DisableSounds)
             {
                 ProbeControlRoomUtils.Logger.message("startIVA() - DisableSounds");
