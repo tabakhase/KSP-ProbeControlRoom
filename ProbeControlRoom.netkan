@@ -1,10 +1,10 @@
 {
-    "spec_version": 1,
+    "spec_version": "1.2.1.0",
     "identifier"  : "ProbeControlRoom",
     "license"     : "CC-BY-NC-SA-3.0",
-    "$vref" 	  : "#/ckan/ksp-avc",
-    "$kref"       : "#/ckan/github/icedown/KSP-ProbeControlRoom",
-    
+	"$vref" 	  : "#/ckan/ksp-avc",
+	"#kref"		  : "#/ckan/spacedock/1061",
+	"download"	  : "https://github.com/icedown/KSP-ProbeControlRoom/releases/download/1.2.1.0/ProbeControlRoom1.2.1.0.zip",
 	
 	"install"	  : [
 	{
@@ -21,9 +21,9 @@
 		"name"	  : "Toolbar"
 	}],
 	"suggests"    : [
-		{ "name"  : "SCANSat"},
+		{ "name"  : "ScanSat"},
 		{ "name"  : "VesselViewer"},
-		{ "name"  : "MechJeb2"},
+		{ "name"  : "MechJeb"},
 		{ "name"  : "DockingPortAlignment"},
 		{ "name"  : "kOS"},
 		{ "name"  : "KPS-AVC"}
