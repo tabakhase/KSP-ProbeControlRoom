@@ -16,6 +16,7 @@ namespace ProbeControlRoom
 
         public static ProbeControlRoom Instance { get; protected set; }
         public static bool isActive = false;
+        
 
 
         private ProbeControlRoomPart aModule;
@@ -65,15 +66,20 @@ namespace ProbeControlRoom
             {
                 appLauncherButton = InitializeApplicationButton();
                 AppLauncher = true;
+                if(!canPCRIVA)
+                {
+                    appLauncherButton.Disable();
+                }
             }
+           
         }
 
         ApplicationLauncherButton InitializeApplicationButton()
         {
             ApplicationLauncherButton Button = null;
 
-            IconActivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/ProbeControlRoomToolbarDisabled", false);
-            IconDeactivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/ProbeControlRoomToolbarEnabled", false);
+            IconActivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/Icons/ProbeControlRoomToolbarDisabled", false);
+            IconDeactivate = GameDatabase.Instance.GetTexture("ProbeControlRoom/Icons/ProbeControlRoomToolbarEnabled", false);
 
 
             Button = ApplicationLauncher.Instance.AddModApplication(
@@ -507,11 +513,8 @@ namespace ProbeControlRoom
                 canPCRIVA = true;
                 rooms.Clear();
                 rooms = null;
-                return;
             }
-
-            //No useable PCR rooms were found.  Time to create one
-            if (pcrNoModel.Count > 0)
+            else if(pcrNoModel.Count > 0)
             {
                 aPart = pcrNoModel[0];
                 aPart.CreateInternalModel();
@@ -525,11 +528,21 @@ namespace ProbeControlRoom
                 aPart.internalModel.Initialize(aPart);
                 aPart.internalModel.SetVisible(false);
                 canPCRIVA = true;
-                return;
             }
 
             pcrNoModel.Clear();
             pcrNoModel = null;
+            if(AppLauncher)
+            {
+                if (canPCRIVA)
+                {
+                    appLauncherButton.Enable();
+                }
+                else
+                {
+                    appLauncherButton.Disable();
+                }
+            }
             return;
         }
     }
