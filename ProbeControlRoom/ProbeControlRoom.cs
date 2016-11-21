@@ -119,6 +119,16 @@ namespace ProbeControlRoom
         }
 
         /// <summary>
+        /// Static function for Toolbar integration
+        /// </summary>
+        public static bool vesselCanIVA
+        {
+            get {
+                return Instance.canPCRIVA;
+            }
+        }
+
+        /// <summary>
         /// Toggles PCR mode on
         /// </summary>
         void OnAppLauncherTrue()
