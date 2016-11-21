@@ -13,45 +13,57 @@ namespace ProbeControlRoom
     /// </summary>
 	public class ProbeControlRoom : MonoBehaviour
     {
-
+        //Instance reference
         public static ProbeControlRoom Instance { get; protected set; }
+
+        //Is IVA currently active and visible
         public static bool isActive = false;
         
-
-
-        private ProbeControlRoomPart aModule;
-        private Part aPart;
+        //Vessel has IVA with crew onboard
         private bool canStockIVA;
+        
+        //Vessel has a probe control room available
         private bool canPCRIVA;
+        
+        //Current PCR module
+        private ProbeControlRoomPart aModule;
 
+        //Current PCR part with internal module
+        private Part aPart;
+        
+        //Storage for original game settings
         float shipVolumeBackup = GameSettings.SHIP_VOLUME;
         float ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
-        //float musicVolumeBackup = GameSettings.MUSIC_VOLUME;
-        //float uiVolumeBackup = GameSettings.UI_VOLUME;
-        //float voiceVolumeBackup = GameSettings.VOICE_VOLUME;
-
         float cameraWobbleBackup = GameSettings.FLT_CAMERA_WOBBLE;
         float cameraFXInternalBackup = GameSettings.CAMERA_FX_INTERNAL;
         float cameraFXExternalBackup = GameSettings.CAMERA_FX_EXTERNAL;
 
+        //Application 
         private static ApplicationLauncherButton appLauncherButton = null;
+        //App launcher in use
         private bool AppLauncher = false;
 
-
+        //App launcher icons
         private Texture2D IconActivate = null;
         private Texture2D IconDeactivate = null;
 
+        /// <summary>
+        /// Startup and initialization
+        /// </summary>
         public void Start()
         {
             ProbeControlRoomUtils.Logger.debug("Start()");
             Instance = this;
+
             refreshVesselRooms();
+
+            //Register game events
             GameEvents.onVesselWasModified.Fire(FlightGlobals.ActiveVessel);
             GameEvents.onVesselChange.Add(OnVesselChange);
             GameEvents.onVesselWasModified.Add(OnVesselModified);
-
             GameEvents.onGUIApplicationLauncherReady.Add(onGUIApplicationLauncherReady);
 
+            //If Manely mode is set true, force straight into IVA
             if (ProbeControlRoomSettings.Instance.ForcePCROnly)
             {
                 ProbeControlRoomUtils.Logger.message("Start() - ForcePCROnly Enabled.");
@@ -59,7 +71,9 @@ namespace ProbeControlRoom
             }
         }
 
-
+        /// <summary>
+        /// Setup app launcher button when the GUI is ready
+        /// </summary>
         private void onGUIApplicationLauncherReady()
         {
             if (!AppLauncher)
@@ -74,6 +88,10 @@ namespace ProbeControlRoom
            
         }
 
+        /// <summary>
+        /// Sets up the App launcher button to activate and deactivate PCR
+        /// </summary>
+        /// <returns>Reference to created button</returns>
         ApplicationLauncherButton InitializeApplicationButton()
         {
             ApplicationLauncherButton Button = null;
@@ -100,14 +118,25 @@ namespace ProbeControlRoom
             return Button;
         }
 
+        /// <summary>
+        /// Toggles PCR mode on
+        /// </summary>
         void OnAppLauncherTrue()
         {
             toggleIVA();
         }
+
+        /// <summary>
+        /// Toggles PCR mode off
+        /// </summary>
         void OnAppLauncherFalse()
         {
             toggleIVA();
         }
+
+        /// <summary>
+        /// Activates and deactivates PCR as well as changes icon in the app launcher
+        /// </summary>
         private void toggleIVA()
         {
             if (isActive)
@@ -120,6 +149,9 @@ namespace ProbeControlRoom
             }
         }
 
+        /// <summary>
+        /// Shuts down IVA and restores all game settings
+        /// </summary>
         public void OnDestroy()
         {
             //in case of revert to launch while in IVA, Update() won't detect it
@@ -156,48 +188,42 @@ namespace ProbeControlRoom
             Instance = null;
         }
 
-
-        public static bool vesselCanIVA
-        {
-            get
-            {
-                return Instance.canPCRIVA;
-            }
-        }
-
-        public static bool vesselCanStockIVA
-        {
-            get
-            {
-                return Instance.canStockIVA;
-            }
-        }
-
-
+        /// <summary>
+        /// Sets up IVA and activtes it
+        /// </summary>
+        /// <returns>True if successful, False on error</returns>
         public bool startIVA()
         {
             ProbeControlRoomUtils.Logger.debug("startIVA()");
             Transform actualTransform;
+
+            //Verify active room available
             if (!canPCRIVA)
             {
                 ProbeControlRoomUtils.Logger.message("startIVA() - Refresh rooms said there were no IVAs available! Can't start.");
                 return false;
             }
 
+            //Ensure part still exists
             if (aPart == null)
             {
                 ProbeControlRoomUtils.Logger.message("startIVA() Lost our part, refreshing");
                 refreshVesselRooms();
             }
+
+            //Setup module for transforms
             if (aPart.FindModulesImplementing<ProbeControlRoomPart>().Count == 0)
             {
                 ProbeControlRoomUtils.Logger.error("startIVA() a module was not found on the part now, exiting");
                 return false;
             }
             aModule = aPart.FindModulesImplementing<ProbeControlRoomPart>()[0];
-            aPart.MakeReferencePart();
-            actualTransform = aPart.internalModel.FindModelTransform(aModule.seatTransformName);
 
+            //Make the PCR part the focused part
+            aPart.MakeReferencePart();
+
+            //Setup camera transform for internal seat
+            actualTransform = aPart.internalModel.FindModelTransform(aModule.seatTransformName);
             if (Transform.Equals(actualTransform, null))
             {
                 ProbeControlRoomUtils.Logger.error("startIVA(Part) - NULL on actualTransform-seatTransformName, using fallback...");
@@ -239,53 +265,54 @@ namespace ProbeControlRoom
             // TODO: create cfg file with cached vars, on crash to be restored
 
 
-
+            //Unsure of this purpose at the moment
             FlightCamera.fetch.EnableCamera();
             FlightCamera.fetch.DeactivateUpdate();
             FlightCamera.fetch.gameObject.SetActive(true);
 
+            //Move internal camera to the correct position and enable
             InternalCamera.Instance.SetTransform(actualTransform, true);
             InternalCamera.Instance.EnableCamera();
 
-
+            //Disable sun effects inside of IVA
             IVASun sunBehaviour;
             sunBehaviour = (IVASun)FindObjectOfType(typeof(IVASun));
             sunBehaviour.enabled = false;
 
-
-
-
+            
             if (UIPartActionController.Instance != null)
                 UIPartActionController.Instance.Deactivate();
 
-
+            //Activate internal camera
             CameraManager.Instance.SetCameraInternal(aPart.internalModel, actualTransform);
-            //          CameraManager.Instance.SetCameraMode(CameraManager.CameraMode.Internal);
+
             ProbeControlRoomUtils.Logger.debug("startIVA() - DONE");
 
+            //Change app launcher button icon
             appLauncherButton.SetTexture(IconDeactivate);
+
             isActive = true;
 
             return true;
 
         }
 
-
+        /// <summary>
+        /// Shuts down current PCR IVA
+        /// </summary>
         public void stopIVA()
         {
+
             ProbeControlRoomUtils.Logger.debug("stopIVA()");
             isActive = false;
-
-
+            
+            //Restore settings to levels prior to entering IVA
             if (ProbeControlRoomSettings.Instance.DisableSounds)
             {
                 ProbeControlRoomUtils.Logger.message("stopIVA() - DisableSounds - RESTORE");
                 //re-enable sound
                 GameSettings.SHIP_VOLUME = shipVolumeBackup;
                 GameSettings.AMBIENCE_VOLUME = ambianceVolumeBackup;
-                //GameSettings.MUSIC_VOLUME = musicVolumeBackup;
-                //GameSettings.UI_VOLUME = uiVolumeBackup;
-                //GameSettings.VOICE_VOLUME = voiceVolumeBackup;
             }
 
             if (ProbeControlRoomSettings.Instance.DisableWobble)
@@ -297,24 +324,31 @@ namespace ProbeControlRoom
                 GameSettings.CAMERA_FX_EXTERNAL = cameraFXExternalBackup;
             }
 
+            //Switch back to normal cameras
             CameraManager.ICameras_DeactivateAll();
-
             CameraManager.Instance.SetCameraFlight();
 
             if (UIPartActionController.Instance != null)
                 UIPartActionController.Instance.Activate();
 
             ProbeControlRoomUtils.Logger.debug("stopIVA() - CHECKMARK");
+
+            //Change app launcher button
             appLauncherButton.SetTexture(IconActivate);
         }
 
+        /// <summary>
+        /// Check for invalid PCR states and controls inputs for acivation/deactivation
+        /// </summary>
         public void Update()
         {
+            // PCR should only be active during Flight
             var scene = HighLogic.LoadedScene;
             if (scene == GameScenes.FLIGHT)
             {
                 if (isActive)
                 {
+                    //If IVA Camera is active, there is a valid and operational stock IVA and PCR needs to be shutdown
                     if (CameraManager.Instance.currentCameraMode == CameraManager.CameraMode.IVA)
                     {
                         ProbeControlRoomUtils.Logger.message("OnUpdate() - real IVA detected, ending...");
@@ -327,7 +361,7 @@ namespace ProbeControlRoom
                     }
 
 
-
+                    // PCR should be active but the InternalCamera is not, something broke, restart PCR
                     if (!MapView.MapIsEnabled && !InternalCamera.Instance.isActive)
                     {
                         ProbeControlRoomUtils.Logger.message("OnUpdate() - IVA broke, kill and maybe restart...");
@@ -342,6 +376,8 @@ namespace ProbeControlRoom
                         stopIVA();
                         startIVA();
                     }
+
+                    //Check for imput to stop IVA
                     if (!MapView.MapIsEnabled && Input.GetKeyDown(GameSettings.CAMERA_MODE.primary))
                     {
                         ProbeControlRoomUtils.Logger.message("OnUpdate() - CAMERA_MODE.key seen, stopIVA()");
@@ -357,6 +393,7 @@ namespace ProbeControlRoom
                 }
                 else
                 {
+                    // Listen for keyboard input to start PCR unless a valid IVA exists.  PCR can still be started via AppLauncher or toolbar
                     if (!canStockIVA && canPCRIVA && Input.GetKeyDown(GameSettings.CAMERA_MODE.primary))
                     {
                         ProbeControlRoomUtils.Logger.message("OnUpdate() - CAMERA_MODE.key seen, startIVA()");
@@ -366,6 +403,7 @@ namespace ProbeControlRoom
             }
             else
             {
+                //Shutdown PCR if not in flight
                 if (isActive)
                 {
                     ProbeControlRoomUtils.Logger.error("OnUpdate() - stopping, active while not in FLIGHT");
@@ -374,17 +412,29 @@ namespace ProbeControlRoom
             }
         }
 
+        /// <summary>
+        /// Vessel has changed to a new one, check IVA status (docking, vessel switching, etc.)
+        /// </summary>
+        /// <param name="v">New Vessel</param>
         private void OnVesselChange(Vessel v)
         {
             ProbeControlRoomUtils.Logger.message("OnVesselChange(Vessel)");
             vesselModified();
         }
+
+        /// <summary>
+        /// Vessel has been modified, check IVA status (Staging, RUD, etc.)
+        /// </summary>
+        /// <param name="v">New Vessel</param>
         private void OnVesselModified(Vessel v)
         {
             ProbeControlRoomUtils.Logger.message("onVesselWasModified(Vessel)");
             vesselModified();
         }
 
+        /// <summary>
+        /// Rebuild room and IVA information and reset PCR as needed
+        /// </summary>
         private void vesselModified()
         {
             ProbeControlRoomUtils.Logger.message("vesselModified()");
@@ -427,6 +477,7 @@ namespace ProbeControlRoom
                 return;
             }
 
+            // If our current vessel still has the old PCR part, keep it active
             if (vessel.parts.Contains(aPart))
             {
                 ProbeControlRoomUtils.Logger.debug("refreshVesselRooms() - Old part still there, cleaning up extra rooms and returning");
@@ -444,7 +495,7 @@ namespace ProbeControlRoom
                 return;
             }
 
-
+            //No current active PCR found, time to create a new one
             canStockIVA = false;
             canPCRIVA = false;
             List<Part> rooms = new List<Part>();
@@ -516,6 +567,7 @@ namespace ProbeControlRoom
             }
             else if(pcrNoModel.Count > 0)
             {
+                // No parts with an available internal model were found, attempting to create one
                 aPart = pcrNoModel[0];
                 aPart.CreateInternalModel();
                 ProbeControlRoomUtils.Logger.debug("refreshVesselRooms() - No active room with a model found, creating now in " + aPart.ToString());
@@ -532,6 +584,8 @@ namespace ProbeControlRoom
 
             pcrNoModel.Clear();
             pcrNoModel = null;
+
+            // Set app launcher availability based on current layout.
             if(AppLauncher)
             {
                 if (canPCRIVA)
