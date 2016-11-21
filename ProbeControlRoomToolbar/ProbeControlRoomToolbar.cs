@@ -37,9 +37,6 @@ namespace ProbeControlRoomToolbar
 				if (ProbeControlRoom.ProbeControlRoom.Instance != null) {
 					ButtonVisibility (ProbeControlRoom.ProbeControlRoom.vesselCanIVA && !MapView.MapIsEnabled);
 					ButtonState (ProbeControlRoom.ProbeControlRoom.isActive);
-					if (ProbeControlRoom.ProbeControlRoomUI.Instance != null) {
-						ProbeControlRoom.ProbeControlRoomUI.messageThatToolbarIsActive ();
-					}
 				}
 			}
 		}
