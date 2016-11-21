@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6BB6BF04-C58F-47EE-A4BB-3CADA7850606}</ProjectGuid>
+    <ProjectGuid>{F85B9451-74D5-4C48-8647-76A779ADD3FF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>ProbeControlRoomToolbar</RootNamespace>
     <AssemblyName>ProbeControlRoomToolbar</AssemblyName>
@@ -38,23 +38,29 @@
     </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\Program Files %28x86%29\Steam\SteamApps\common\Kerbal Space Program\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Development\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="Toolbar">
+      <HintPath>F:\Development\Kerbal Space Program\GameData\000_Toolbar\Toolbar.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\..\Program Files %28x86%29\Steam\SteamApps\common\Kerbal Space Program\KSP_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="aaa_Toolbar">
-      <HintPath>..\GameData\000_Toolbar\Toolbar.dll</HintPath>
-    </Reference>
-    <Reference Include="ProbeControlRoom">
-      <HintPath>..\GameData\ProbeControlRoom\ProbeControlRoom.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Development\Kerbal Space Program\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProbeControlRoomToolbar.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ProbeControlRoom\ProbeControlRoom.csproj">
+      <Project>{6bb6bf04-c58f-47ee-a4bb-3cada7850606}</Project>
+      <Name>ProbeControlRoom</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y "$(TargetDir)$(TargetFileName)" "$(SolutionDir)GameData\ProbeControlRoom\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

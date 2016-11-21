@@ -1,7 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProbeControlRoom", "ProbeControlRoom\ProbeControlRoom.csproj", "{6BB6BF04-C58F-47EE-A4BB-3CADA7850606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProbeControlRoomToolbar", "ProbeControlRoomToolbar\ProbeControlRoomToolbar.csproj", "{F85B9451-74D5-4C48-8647-76A779ADD3FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,13 @@ Global
 		{6BB6BF04-C58F-47EE-A4BB-3CADA7850606}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BB6BF04-C58F-47EE-A4BB-3CADA7850606}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BB6BF04-C58F-47EE-A4BB-3CADA7850606}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F85B9451-74D5-4C48-8647-76A779ADD3FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F85B9451-74D5-4C48-8647-76A779ADD3FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F85B9451-74D5-4C48-8647-76A779ADD3FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F85B9451-74D5-4C48-8647-76A779ADD3FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = ProbeControlRoom\ProbeControlRoom.csproj

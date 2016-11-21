@@ -11,7 +11,7 @@ namespace ProbeControlRoom
 		public void EventActivateProbeControlRoomPart()
 		{
 			ProbeControlRoomUtils.Logger.message ("[ProbeControlRoom][ProbeControlRoomPart] EventActivateProbeControlRoomPart()");
-			bool ivaLancher = ProbeControlRoom.Instance.startIVA (this.part);
+			bool ivaLancher = ProbeControlRoom.Instance.startIVA ();
 		}
 
 

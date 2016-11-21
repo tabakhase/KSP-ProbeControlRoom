@@ -45,17 +45,17 @@ namespace ProbeControlRoom
 			public static void debug(String str)
 			{
 				if(modes.DEBUG.Equals(mode))
-					logMessage (str);
+					logMessage ("DEBUG: " + str);
 			}
 			public static void message(String str)
 			{
 				if(modes.DEBUG.Equals(mode) || modes.TESTING.Equals(mode) )
-					logMessage (str);
+					logMessage ("INFO: " + str);
 			}
 			public static void error(String str)
 			{
 				if(modes.DEBUG.Equals(mode) || modes.TESTING.Equals(mode) || modes.RELEASE.Equals(mode))
-					logMessage (str);
+					logMessage ("ERROR: " + str);
 			}
 
 
@@ -63,9 +63,10 @@ namespace ProbeControlRoom
 			{
 				if (limiter && str != lastMessage) {
 					lastMessage = str;
-					Debug.Log (str);
+                    
+					Debug.Log ("[PCR] " + str);
 				} else {
-					Debug.Log (str);
+					Debug.Log ("[PCR] " + str);
 				}
 			}
 
