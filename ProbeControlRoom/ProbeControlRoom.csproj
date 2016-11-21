@@ -58,7 +58,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProbeControlRoom.cs" />
     <Compile Include="ProbeControlRoomPart.cs" />
-    <Compile Include="ProbeControlRoomUI.cs" />
     <Compile Include="ProbeControlRoomUtils.cs" />
     <Compile Include="ProbeControlRoomSettings.cs" />
   </ItemGroup>
