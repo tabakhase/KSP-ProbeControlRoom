@@ -20,8 +20,8 @@ namespace ProbeControlRoom
 
         private ProbeControlRoomPart aModule;
         private Part aPart;
-        private bool canStockIVA = false;
-        private bool canPCRIVA = false;
+        private bool canStockIVA;
+        private bool canPCRIVA;
 
         float shipVolumeBackup = GameSettings.SHIP_VOLUME;
         float ambianceVolumeBackup = GameSettings.AMBIENCE_VOLUME;
@@ -407,8 +407,7 @@ namespace ProbeControlRoom
         /// </summary>
 		private void refreshVesselRooms()
         {
-            canStockIVA = false;
-            canPCRIVA = false;
+            ProbeControlRoomUtils.Logger.debug("refreshVesselRooms()");
 
             Vessel vessel = FlightGlobals.ActiveVessel;
 
@@ -416,7 +415,6 @@ namespace ProbeControlRoom
             if (vessel == null)
             {
                 canStockIVA = false;
-                canPCRIVA = false;
                 aPart = null;
                 aModule = null;
                 ProbeControlRoomUtils.Logger.error("refreshVesselRooms() - ERROR: FlightGlobals.activeVessel is NULL");
@@ -425,19 +423,24 @@ namespace ProbeControlRoom
 
             if (vessel.parts.Contains(aPart))
             {
+                ProbeControlRoomUtils.Logger.debug("refreshVesselRooms() - Old part still there, cleaning up extra rooms and returning");
                 //Our old part is still there and active. Clean up extras as needed and return
                 for (int i = 0; i < vessel.parts.Count; i++)
                 {
                     Part p = vessel.parts[i];
                     if (p.GetComponent<ProbeControlRoomPart>() != null && aPart != p && p.protoModuleCrew.Count == 0 && p.internalModel != null)
                     {
-                        ProbeControlRoomUtils.Logger.debug("refreshRooms() Found and destroying old PCR in " + p.partName);
+                        ProbeControlRoomUtils.Logger.debug("refreshRooms() Found and destroying old PCR in " + p.ToString());
                         p.internalModel.gameObject.DestroyGameObject();
                         p.internalModel = null;
                     }
                 }
                 return;
             }
+
+
+            canStockIVA = false;
+            canPCRIVA = false;
             List<Part> rooms = new List<Part>();
             List<Part> pcrNoModel = new List<Part>();
 
@@ -456,18 +459,20 @@ namespace ProbeControlRoom
                         //Check for stock IVA
                         if (p.protoModuleCrew.Count > 0)
                         {
-                            ProbeControlRoomUtils.Logger.message("refreshVesselRooms() - Found Stock IVA with crew");
+                            ProbeControlRoomUtils.Logger.message("refreshVesselRooms() - Found Stock IVA with crew: " + p.ToString());
                             canStockIVA = true;
                         }
                         else
                         {
                             //No stock IVA possible, PCR model found
+                            ProbeControlRoomUtils.Logger.message("refreshVesselRooms() - Found part with PCR IVA model: " + p.ToString());
                             rooms.Add(p);
                         }
                     }
                     else
                     {
                         //PCR Module noted but no active internal model found
+                        ProbeControlRoomUtils.Logger.message("refreshVesselrooms() - Found PCR part but it has no model: " + p.ToString());
                         pcrNoModel.Add(p);
                     }
 
@@ -478,30 +483,13 @@ namespace ProbeControlRoom
             //Clean up and specifiy active rooms
             if (rooms.Count > 0)
             {
+                ProbeControlRoomUtils.Logger.message("refreshVesselRooms() - Cleaning up pcrNoModel List");
                 pcrNoModel.Clear();
                 pcrNoModel = null;
 
-                //Check for old part and continue using it if it is still there
-                if (aPart != null)
-                {
-                    if (rooms.Contains(aPart))
-                    {
-                        //Clean up extra rooms that might have been added
-                        for (int i = 0; i < rooms.Count; i++)
-                        {
-                            if (rooms[i] != aPart)
-                            {
-                                rooms[i].internalModel.gameObject.DestroyGameObject();
-                                rooms[i].internalModel = null;
-                            }
-                        }
-                    }
-                    canPCRIVA = true;
-                    rooms.Clear();
-                    rooms = null;
-                    return;
-                }
+
                 //Select primary part for use and verify it's initialized
+                ProbeControlRoomUtils.Logger.message("refreshVesselRooms() - Initializing room in " + aPart.ToString());
                 aPart = rooms[0];
                 aPart.internalModel.Initialize(aPart);
                 aPart.internalModel.SetVisible(false);
@@ -509,6 +497,7 @@ namespace ProbeControlRoom
                 //Remove Excess internal models
                 if (rooms.Count > 1)
                 {
+                    ProbeControlRoomUtils.Logger.debug("refreshVesselRooms() - Removing " + (rooms.Count - 1) + " Rooms");
                     for (int i = 1; i < rooms.Count; i++)
                     {
                         rooms[i].internalModel.gameObject.DestroyGameObject();
@@ -526,24 +515,21 @@ namespace ProbeControlRoom
             {
                 aPart = pcrNoModel[0];
                 aPart.CreateInternalModel();
+                ProbeControlRoomUtils.Logger.debug("refreshVesselRooms() - No active room with a model found, creating now in " + aPart.ToString());
                 if (aPart.internalModel == null)
                 {
                     //Something went wrong creating the model
                     ProbeControlRoomUtils.Logger.message("refreshVesselRooms() - ERROR creating internal model");
-                    canPCRIVA = false;
                     return;
                 }
                 aPart.internalModel.Initialize(aPart);
                 aPart.internalModel.SetVisible(false);
-                pcrNoModel.Clear();
-                pcrNoModel = null;
                 canPCRIVA = true;
                 return;
             }
 
             pcrNoModel.Clear();
             pcrNoModel = null;
-            canPCRIVA = false;
             return;
         }
     }
